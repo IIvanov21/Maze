@@ -14,32 +14,66 @@ class GameEngine:
         self.numOfWalls=120
         self.player = Player(self.maze.start_position[0],self.maze.start_position[1])
         self.entities = [self.player, Wall(2, 1), Wall(3, 1), Wall(4, 1), Exit(self.maze.exit_position[0], self.maze.exit_position[1])]
+        # Screen now Game Engine attribute
         self._screen = None
+        # Create a specific dicitionary for obstacles
         self._obstacles = dict()
     
     def add_walls(self):
+        """
+        This adds the random walls to the game engine
+        """
+
+        # Create an easy local reference for the already initialised entities
         it = self.entities
+
+        # Create a dictionary for the entities using their coordinates as a key
+        # this allows a lazy check of coordinate collisions against all entities
         entity_dict = { (itr.x, itr.y) : itr for itr in it }
+
+        # This creates a dictionary specifically for wall instances that will now
+        # be added as random entries in this function
         wall_dict = dict()
-        # Create a dictionary of obstacles - make list of walls for now as a base
+
+        # Create a dictionary of obstacles - make list of walls all ready preset
+        # as a base.
         list_obstacles = [elm for elm in self.entities if isinstance(elm, Wall)]
+
+        # Iterate the number of new walls that need to be created
         for random_wall_count in range(0, self.numOfWalls):
+
+            # Create a counter for the number of attempts at placing a wall, note
+            # if a wall overlaps then a new position should be contemplated.
             _iter_count = 0
+
+            # Create random coordinates for wall
             _x = random.randint(1, self.maze_width)
             _y = random.randint(1, self.maze_height)
+
+            # Iterate random coordinates if coordinates are already taken in entity
+            # dictionary
             while (_x, _y) in entity_dict and _iter_count < 100:
                 _x = random.randint(1, self.maze_width)
                 _y = random.randint(1, self.maze_height)
+
+            # If the iteration count is 100 then assume that no placement is actually
+            # avaialable
             if _iter_count == 100:
+               # Raise an exception and break the wall placement loop since it won't
+               # be possible to place any more
                raise Exception("Couldn't place the wall in a reasonable time!")
                break
+
+            # Append a new dictionary item for a new Wall instance
             wall_dict[(_x, _y)] = Wall(_x,_y)
 
+        # Iterate the wall dictionary and add the items to both the entities and the
+        # list of obstacles for incorporation later
         for (key_x, key_y), value in wall_dict.items():
             self.entities.append(value)
             list_obstacles.append(value)
 
-        # Create a dictionary of obstacles
+        # Create a master dictionary of obstacles
         self._obstacles = { (itr.x, itr.y) : itr for itr in list_obstacles }
     
     def handle_input(self):
@@ -76,7 +110,9 @@ class GameEngine:
 
     def run_game(self):
         pygame.init()
+        # set the screen attribute
         self._screen = pygame.display.set_mode((self.maze.width * 30, self.maze.height * 30))
+        # Set the screen attribute in the maze
         self.maze.screen = self._screen
         pygame.display.set_caption("Maze Game")
         self.add_walls()
