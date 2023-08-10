@@ -11,7 +11,15 @@ class Maze:
         self.exit_position = (width-1,height-1)
         self.screen_height=600
         self.screen_width=800
-        #self.screen=screen
+        self._screen=None
+
+    @property
+    def screen(self):
+        return self._screen
+
+    @screen.setter
+    def screen(self, screen):
+        self._screen = screen
 
     def generate_maze(self):
         #Add walls randomly

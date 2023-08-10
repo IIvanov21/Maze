@@ -13,6 +13,7 @@ class GameEngine:
         self.maze = Maze(self.maze_width,self.maze_height) #Change the maze dimensions as needed
         self.player = Player(self.maze.start_position[0],self.maze.start_position[1])
         self.entities = [self.player, Wall(2, 1), Wall(3, 1), Wall(4, 1), Exit(self.maze.exit_position[0], self.maze.exit_position[1])]
+        self._screen = None
     
     def add_walls(self):
         for x in range(random.randint(1,self.numOfWalls)):
@@ -49,19 +50,20 @@ class GameEngine:
 
     def run_game(self):
         pygame.init()
-        screen = pygame.display.set_mode((self.maze.width * 30, self.maze.height * 30))
+        self._screen = pygame.display.set_mode((self.maze.width * 30, self.maze.height * 30))
+        self.maze.screen = self._screen
         pygame.display.set_caption("Maze Game")
         self.add_walls()
         while True:
             self.handle_input()
             self.check_win_condition()
 
-            screen.fill((255, 255, 255))
+            self._screen.fill((255, 255, 255))
 
             for entity in self.entities:
-                pygame.draw.rect(screen, (0, 0, 0), (entity.x * 30, entity.y * 30, 30, 30))
+                pygame.draw.rect(self._screen, (0, 0, 0), (entity.x * 30, entity.y * 30, 30, 30))
 
-            pygame.draw.rect(screen, (0, 255, 0), (self.player.x * 30, self.player.y * 30, 30, 30))
+            pygame.draw.rect(self._screen, (0, 255, 0), (self.player.x * 30, self.player.y * 30, 30, 30))
 
             pygame.display.flip()
 
