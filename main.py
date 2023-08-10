@@ -16,9 +16,25 @@ class GameEngine:
         self._screen = None
     
     def add_walls(self):
-        for x in range(random.randint(1,self.numOfWalls)):
-            for y in range(random.randint(1,self.numOfWalls)):
-                self.entities.append(Wall(x,y))
+        it = self.entities
+        entity_dict = { (itr.x, itr.y) : itr for itr in it }
+        wall_dict = dict()
+        # Create a dictionary of obstacles - make list of walls for now as a base
+        list_obstacles = [elm for elm in self.entities if isinstance(elm, Wall)]
+        for random_wall_count in range(0, self.numOfWalls):
+            _iter_count = 0
+            _x = random.randint(1, self.maze_width)
+            _y = random.randint(1, self.maze_height)
+            while (_x, _y) in entity_dict and _iter_count < 100:
+                _x = random.randint(1, self.maze_width)
+                _y = random.randint(1, self.maze_height)
+            if _iter_count == 100:
+               raise Exception("Couldn't place the wall in a reasonable time!")
+               break
+            wall_dict[(_x, _y)] = Wall(_x,_y)
+
+        for (key_x, key_y), value in wall_dict.items():
+            self.entities.append(value)
     
     def handle_input(self):
         for event in pygame.event.get():
