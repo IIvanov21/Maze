@@ -12,6 +12,10 @@ class GameEntity(ABC):
         pass
 
     def adjacent(self, x, y) -> bool:
-        if math.distance([self.x, self.y], [x, y]) > 1:
+        """
+        Add way to check if entity is adjacent to another set of
+        coordinates - note this could be a boundary.
+        """
+        if math.dist([self.x, self.y], [x, y]) > 1:
            return False
         return true
