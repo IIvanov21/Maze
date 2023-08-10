@@ -1,15 +1,16 @@
 import random
 import pygame
+from typing import Tuple
 
 class Maze:
-    def __init__(self,width,height):
+    def __init__(self,width,height, start: Tuple[int, int], exit: Tuple[int, int]):
         # Width and Height added as retained attributes
         self.width=width
         self.height=height
         self.wall_density=0.3
         self.maze_layout=[[0 for _ in range (width)]for _ in range(height)]
-        self.start_position=(0,0)
-        self.exit_position = (width-1,height-1)
+        self.start_position=(start[0],start[1])
+        self.exit_position = (exit[0],exit[1])
         self.screen_height=600
         self.screen_width=800
         # Screen reference added as retained attribute
