@@ -14,6 +14,7 @@ class GameEngine:
         self.player = Player(self.maze.start_position[0],self.maze.start_position[1])
         self.entities = [self.player, Wall(2, 1), Wall(3, 1), Wall(4, 1), Exit(self.maze.exit_position[0], self.maze.exit_position[1])]
         self._screen = None
+        self._obstacles = dict()
     
     def add_walls(self):
         it = self.entities
@@ -35,6 +36,10 @@ class GameEngine:
 
         for (key_x, key_y), value in wall_dict.items():
             self.entities.append(value)
+            list_obstacles.append(value)
+
+        # Create a dictionary of obstacles
+        self._obstacles = { (itr.x, itr.y) : itr for itr in list_obstacles }
     
     def handle_input(self):
         for event in pygame.event.get():
@@ -54,6 +59,10 @@ class GameEngine:
                     
     def move_player(self, dx, dy):
         new_x, new_y = self.player.x + dx, self.player.y + dy
+
+        # Check if new poisiton would be in obstacle - if so don't bother
+        if (new_x, new_y) in self._obstacles:
+            return
 
         if 0 <= new_x < self.maze.width and 0 <= new_y < self.maze.height and self.maze.maze_layout[new_y][new_x] == 0:
             self.player.move(dx, dy)
