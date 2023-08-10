@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import math
 
 class GameEntity(ABC):
     def __init__(self,x,y,symbol):
