@@ -8,8 +8,9 @@ import random
 
 class GameEngine:
     def __init__(self):
-        self.maze = Maze(20,20) #Change the maze dimensions as needed
-        self.numOfWalls=10
+        self.maze_width = 20
+        self.maze_height = 20
+        self.maze = Maze(self.maze_width,self.maze_height) #Change the maze dimensions as needed
         self.player = Player(self.maze.start_position[0],self.maze.start_position[1])
         self.entities = [self.player, Wall(2, 1), Wall(3, 1), Wall(4, 1), Exit(self.maze.exit_position[0], self.maze.exit_position[1])]
     
