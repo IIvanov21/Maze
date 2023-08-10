@@ -9,3 +9,8 @@ class GameEntity(ABC):
     @abstractmethod
     def move(self,dx,dy):
         pass
+
+    def adjacent(self, x, y) -> bool:
+        if math.distance([self.x, self.y], [x, y]) > 1:
+           return False
+        return true
